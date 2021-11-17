@@ -11,6 +11,8 @@ public class BallHero : MonoBehaviour
     private Rigidbody rb;
     private bool isFloor;
 
+    public static bool canShoot { get; set; }
+
     public delegate void BulletCreate();
     public static event BulletCreate bulletCreate;
 
@@ -30,20 +32,24 @@ public class BallHero : MonoBehaviour
     }
     private void Start()
     {
+        canShoot = true;
         isFloor = true;
         rb = GetComponent<Rigidbody>();
     }
     private void Onswipe(Vector2 direction)
     {
-        Jump(direction);
+        if (isFloor)
+        {
+         Jump(direction);
+        }
     }
-    private void Update()
+     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (transform.localScale.x > 0.1f) bulletCreate?.Invoke();
+            if (transform.localScale.x > 0.1f) { bulletCreate?.Invoke(); }
         }
-        else if (Input.GetMouseButton(0))
+       if (Input.GetMouseButton(0))
         {
           if(transform.localScale.x > 0.1f) 
             { 
@@ -59,6 +65,7 @@ public class BallHero : MonoBehaviour
     }
     private void Jump(Vector2 dir)
     {
+        canShoot = false;
         isFloor = false;
         rb.AddForce(Vector3.forward * distace, ForceMode.Impulse);
         rb.AddForce(dir * force, ForceMode.Impulse);
@@ -67,7 +74,8 @@ public class BallHero : MonoBehaviour
     {
        if (collision.gameObject.CompareTag("Floor"))
         {
-            isFloor = true;
+          canShoot = true;
+          isFloor = true;
         }
         if (collision.gameObject.CompareTag("Enemy"))
         {

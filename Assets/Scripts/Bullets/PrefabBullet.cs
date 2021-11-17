@@ -5,7 +5,7 @@ using UnityEngine;
 public class PrefabBullet : MonoBehaviour
 {
     
-    float infectionScale = 0.0005f;
+    float infectionScale = 0.001f;
     private float radius = 0.2f;
     private Vector3 curLocalScale;
 
@@ -22,7 +22,7 @@ public class PrefabBullet : MonoBehaviour
             curLocalScale = transform.localScale;
             radius += infectionScale;
         }
-    }
+        }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
@@ -34,25 +34,16 @@ public class PrefabBullet : MonoBehaviour
                 if (hit.gameObject.CompareTag("Enemy"))
                 {
                     hit.gameObject.GetComponent<Renderer>().material.color = new Color(0, 255, 0);
-                    Destroy(hit.gameObject, 1.5f);
-                    Destroy(gameObject, 1.5f);
+                    Destroy(hit.gameObject, 1f);
+                    Destroy(gameObject);
                     
                 }
             }
         }
-        else
+       else
         {
-            StartCoroutine(DestroyPrefab());
+           Destroy(gameObject, 1.5f);
         }
     }
 
-    private IEnumerator DestroyPrefab()
-    {
-        if (gameObject != null)
-        {
-            yield return new WaitForSeconds(2f);
-            Destroy(gameObject);
-        } 
-    }
-    
 }
